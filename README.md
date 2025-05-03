@@ -130,6 +130,7 @@
   </div>
 
   <script>
+    // Função para atualizar o email com base na filial de origem selecionada
     function atualizarEmail() {
       const emailInput = document.getElementById('email');
       const filialOrigem = document.getElementById('filial-origem').value;
@@ -147,12 +148,14 @@
       emailInput.value = emailPorFilial[filialOrigem] || "";
     }
 
+    // Carregar o número da transferência automaticamente
     window.onload = function () {
       google.script.run.withSuccessHandler(function(numeroAtual) {
         document.getElementById('numero-transferencia').value = numeroAtual;
-      }).obterNumeroTransferencia();
+      }).getNextTransferNumber();
     };
 
+    // Envio do formulário
     document.getElementById('transfer-form').addEventListener('submit', function(event) {
       event.preventDefault();
 
