@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRANSFERÊNCIA ENTRE LOJAS</title>
     <style>
-        /* Layout anterior restaurado */
+        /* Layout original */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -59,6 +59,12 @@
         .submit-button:hover, .clear-button:hover {
             background-color: #45a049;
         }
+        #success-message {
+            color: green;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +73,7 @@
             <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
         </div>
 
-        <form action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec" method="POST">
+        <form id="transfer-form" action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec" method="POST">
             <!-- Campo de e-mail -->
             <div class="question-container">
                 <div class="question-title">Enviar por email <span class="required-star">*</span></div>
@@ -116,8 +122,10 @@
                 <input type="text" id="num-transferencia" disabled>
             </div>
 
+            <div id="success-message">Formulário enviado com sucesso!</div>
+
             <div class="submit-buttons">
-                <button type="reset" class="clear-button">Limpar formulário</button>
+                <button type="reset" class="clear-button" onclick="clearForm()">Limpar formulário</button>
                 <button type="submit" class="submit-button">Enviar</button>
             </div>
         </form>
@@ -128,7 +136,6 @@
             const emailInput = document.getElementById('email');
             const filialOrigem = document.getElementById('filial-origem').value;
 
-            // Lógica de e-mail automático com base na filial (padrão para todos no momento)
             const emailPorFilial = {
                 AATUR: "hs.operacoes.loja@gmail.com",
                 FLORIANO: "hs.operacoes.loja@gmail.com",
@@ -142,7 +149,6 @@
             emailInput.value = emailPorFilial[filialOrigem] || "";
         }
 
-        // Função para carregar o número da transferência quando o formulário for carregado
         function carregarNumeroTransferencia() {
             fetch("/getTransferNumber")
                 .then(response => response.json())
@@ -151,8 +157,27 @@
                 });
         }
 
-        // Chama a função ao carregar a página
         window.onload = carregarNumeroTransferencia;
+
+        // Ao enviar o formulário, mostrar mensagem de sucesso
+        document.getElementById('transfer-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    document.getElementById("success-message").style.display = 'block';
+                    setTimeout(function() {
+                        document.getElementById("success-message").style.display = 'none';
+                        document.getElementById('transfer-form').reset(); // Limpar formulário
+                    }, 2000);
+                }
+            });
+        });
     </script>
 </body>
 </html>
