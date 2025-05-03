@@ -26,21 +26,6 @@
             margin-bottom: 20px;
             color: #202124;
         }
-        .account-info {
-            font-size: 14px;
-            color: #5f6368;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #dadce0;
-        }
-        .required-note {
-            font-size: 14px;
-            color: #5f6368;
-            margin-bottom: 20px;
-        }
-        .required-star {
-            color: #d93025;
-        }
         .question-container {
             background-color: white;
             border: 1px solid #dadce0;
@@ -52,11 +37,6 @@
             font-size: 16px;
             font-weight: 500;
             margin-bottom: 8px;
-        }
-        .email-option {
-            font-size: 14px;
-            color: #5f6368;
-            margin-top: 10px;
         }
         input[type="email"], textarea, select {
             width: 100%;
@@ -113,30 +93,19 @@
     <div class="form-container">
         <div class="form-header">
             <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
-            <div class="account-info">
-                Na aparcacosa.lujaj@gmail.com
-                <a href="#" style="color: #1a73e8; text-decoration: none; margin-left: 10px;">Mudar de conta</a>
-            </div>
-            <div class="required-note">
-                <span class="required-star">*</span> Indica uma pergunta obrigatória.
-            </div>
         </div>
 
         <form action="#" method="POST">
             <!-- Campo de e-mail -->
             <div class="question-container">
                 <div class="question-title">Enviar por email <span class="required-star">*</span></div>
-                <input type="email" name="email" required>
-                <div class="email-option">
-                    <input type="checkbox" id="register-email" name="register-email" checked>
-                    <label for="register-email">Registrar na aparcacosa.lujaj@gmail.com como o e-mail a ser incluído na minha resposta</label>
-                </div>
+                <input type="email" name="email" id="email" required readonly>
             </div>
 
             <!-- Filial Origem -->
             <div class="question-container">
                 <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
-                <select name="filial-origem" required>
+                <select name="filial-origem" id="filial-origem" required onchange="atualizarEmail()">
                     <option value="" disabled selected>Selecione</option>
                     <option value="AATUR">AATUR</option>
                     <option value="FLORIANO">FLORIANO</option>
@@ -175,5 +144,25 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function atualizarEmail() {
+            const emailInput = document.getElementById('email');
+            const filialOrigem = document.getElementById('filial-origem').value;
+
+            // Lógica de e-mail automático com base na filial (padrão para todos no momento)
+            const emailPorFilial = {
+                AATUR: "hs.operacoes.loja@gmail.com",
+                FLORIANO: "hs.operacoes.loja@gmail.com",
+                JOTA: "hs.operacoes.loja@gmail.com",
+                MOGA: "hs.operacoes.loja@gmail.com",
+                PONTO: "hs.operacoes.loja@gmail.com",
+                JA: "hs.operacoes.loja@gmail.com",
+                JE: "hs.operacoes.loja@gmail.com"
+            };
+
+            emailInput.value = emailPorFilial[filialOrigem] || "";
+        }
+    </script>
 </body>
 </html>
