@@ -95,7 +95,7 @@
             <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
         </div>
 
-        <form action="#" method="POST">
+        <form action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec" method="POST">
             <!-- Campo de e-mail -->
             <div class="question-container">
                 <div class="question-title">Enviar por email <span class="required-star">*</span></div>
@@ -105,7 +105,7 @@
             <!-- Filial Origem -->
             <div class="question-container">
                 <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
-                <select name="filial-origem" id="filial-origem" required onchange="atualizarEmail()">
+                <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
                     <option value="" disabled selected>Selecione</option>
                     <option value="AATUR">AATUR</option>
                     <option value="FLORIANO">FLORIANO</option>
@@ -120,7 +120,7 @@
             <!-- Filial Destino -->
             <div class="question-container">
                 <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
-                <select name="filial-destino" required>
+                <select name="filialDestino" required>
                     <option value="" disabled selected>Selecione</option>
                     <option value="AATUR">AATUR</option>
                     <option value="FLORIANO">FLORIANO</option>
@@ -150,7 +150,7 @@
             const emailInput = document.getElementById('email');
             const filialOrigem = document.getElementById('filial-origem').value;
 
-            // Lógica de e-mail automático com base na filial (padrão para todos no momento)
+            // Lógica de e-mail automático com base na filial origem (padrão para todos por enquanto)
             const emailPorFilial = {
                 AATUR: "hs.operacoes.loja@gmail.com",
                 FLORIANO: "hs.operacoes.loja@gmail.com",
