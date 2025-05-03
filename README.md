@@ -6,80 +6,62 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+      background-color: #f4f4f4;
       margin: 0;
       padding: 0;
     }
-
     .form-container {
-      background-color: #ffffff;
-      width: 80%;
+      width: 50%;
       margin: 50px auto;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
     .form-header {
       text-align: center;
       margin-bottom: 20px;
     }
-
     .form-title {
       font-size: 24px;
-      font-weight: bold;
       color: #333;
     }
-
-    .form-section {
-      margin-bottom: 20px;
+    .question-container {
+      margin-bottom: 15px;
     }
-
-    .form-section label {
+    .question-title {
       font-size: 16px;
-      color: #333;
-      display: block;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
-
-    .form-section input[type="text"],
-    .form-section input[type="email"],
-    .form-section textarea {
+    .required-star {
+      color: red;
+    }
+    input[type="email"], input[type="text"], select, textarea {
       width: 100%;
       padding: 10px;
-      font-size: 16px;
+      margin: 5px 0 20px 0;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 4px;
     }
-
     .submit-buttons {
-      display: flex;
-      justify-content: space-between;
+      text-align: center;
     }
-
-    .submit-buttons button {
+    .submit-button, .clear-button {
       padding: 10px 20px;
-      font-size: 16px;
+      margin: 5px;
+      border: none;
       background-color: #4CAF50;
       color: white;
-      border: none;
-      border-radius: 5px;
+      font-size: 16px;
       cursor: pointer;
     }
-
-    .submit-buttons button:hover {
+    .submit-button:hover, .clear-button:hover {
       background-color: #45a049;
     }
-
-    .clear-button {
-      background-color: #f44336;
-    }
-
     #success-message {
       color: green;
-      font-size: 16px;
+      font-weight: bold;
       text-align: center;
-      margin-top: 20px;
+      display: none;
     }
   </style>
 </head>
@@ -90,27 +72,55 @@
     </div>
 
     <form id="transfer-form">
-      <div class="form-section">
-        <label for="numero-transferencia">Número da Transferência</label>
+      <!-- Campo de e-mail -->
+      <div class="question-container">
+        <div class="question-title">Enviar por email <span class="required-star">*</span></div>
+        <input type="email" name="email" id="email" required readonly>
+      </div>
+
+      <!-- Filial Origem -->
+      <div class="question-container">
+        <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
+        <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
+          <option value="" disabled selected>Selecione</option>
+          <option value="AATUR">AATUR</option>
+          <option value="FLORIANO">FLORIANO</option>
+          <option value="JOTA">JOTA</option>
+          <option value="MOGA">MOGA</option>
+          <option value="PONTO">PONTO</option>
+          <option value="JA">JA</option>
+          <option value="JE">JE</option>
+        </select>
+      </div>
+
+      <!-- Filial Destino -->
+      <div class="question-container">
+        <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
+        <select name="filialDestino" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="AATUR">AATUR</option>
+          <option value="FLORIANO">FLORIANO</option>
+          <option value="JOTA">JOTA</option>
+          <option value="MOGA">MOGA</option>
+          <option value="PONTO">PONTO</option>
+          <option value="JA">JA</option>
+          <option value="JE">JE</option>
+        </select>
+      </div>
+
+      <!-- Mercadorias -->
+      <div class="question-container">
+        <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
+        <textarea name="mercadorias" required placeholder="Sua resposta"></textarea>
+      </div>
+
+      <!-- Número da Transferência -->
+      <div class="question-container">
+        <div class="question-title">NÚMERO DA TRANSFERÊNCIA</div>
         <input type="text" id="numero-transferencia" name="numeroTransferencia" readonly>
       </div>
 
-      <div class="form-section">
-        <label for="filial-origem">Filial de Origem</label>
-        <input type="text" id="filial-origem" name="filialOrigem" required>
-      </div>
-
-      <div class="form-section">
-        <label for="filial-destino">Filial de Destino</label>
-        <input type="text" id="filial-destino" name="filialDestino" required>
-      </div>
-
-      <div class="form-section">
-        <label for="mercadorias">Mercadorias</label>
-        <textarea id="mercadorias" name="mercadorias" rows="4" required></textarea>
-      </div>
-
-      <div id="success-message" style="display: none;">Formulário enviado com sucesso!</div>
+      <div id="success-message">Formulário enviado com sucesso!</div>
 
       <div class="submit-buttons">
         <button type="reset" class="clear-button">Limpar formulário</button>
@@ -120,17 +130,31 @@
   </div>
 
   <script>
-    // Função para carregar o número de transferência
+    function atualizarEmail() {
+      const emailInput = document.getElementById('email');
+      const filialOrigem = document.getElementById('filial-origem').value;
+
+      const emailPorFilial = {
+        AATUR: "hs.operacoes.loja@gmail.com",
+        FLORIANO: "hs.operacoes.loja@gmail.com",
+        JOTA: "hs.operacoes.loja@gmail.com",
+        MOGA: "hs.operacoes.loja@gmail.com",
+        PONTO: "hs.operacoes.loja@gmail.com",
+        JA: "hs.operacoes.loja@gmail.com",
+        JE: "hs.operacoes.loja@gmail.com"
+      };
+
+      emailInput.value = emailPorFilial[filialOrigem] || "";
+    }
+
     window.onload = function () {
       google.script.run.withSuccessHandler(function(numeroAtual) {
         document.getElementById('numero-transferencia').value = numeroAtual;
-      }).getNextTransferNumber();
+      }).obterNumeroTransferencia();
     };
 
-    // Envio do formulário
     document.getElementById('transfer-form').addEventListener('submit', function(event) {
       event.preventDefault();
-      console.log("Botão de envio pressionado!"); // Log para verificar se o evento é acionado
 
       const form = event.target;
       const dados = {
@@ -141,10 +165,7 @@
         numeroTransferencia: form.numeroTransferencia.value
       };
 
-      console.log("Dados do formulário", dados); // Log para ver os dados antes de enviar
-
       google.script.run.withSuccessHandler(function(novoNumero) {
-        console.log("Dados processados com sucesso!");
         document.getElementById("success-message").style.display = 'block';
         setTimeout(function() {
           document.getElementById("success-message").style.display = 'none';
