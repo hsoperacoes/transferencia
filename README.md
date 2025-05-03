@@ -62,6 +62,38 @@
       font-weight: bold;
       text-align: center;
       display: none;
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #e8f5e9;
+      border-radius: 4px;
+    }
+    #error-message {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #ffebee;
+      border-radius: 4px;
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+    }
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4CAF50;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -96,7 +128,7 @@
       <!-- Filial Destino -->
       <div class="question-container">
         <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
-        <select name="filialDestino" required>
+        <select name="filialDestino" id="filial-destino" required>
           <option value="" disabled selected>Selecione</option>
           <option value="AATUR">AATUR</option>
           <option value="FLORIANO">FLORIANO</option>
@@ -111,7 +143,7 @@
       <!-- Mercadorias -->
       <div class="question-container">
         <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
-        <textarea name="mercadorias" required placeholder="Sua resposta"></textarea>
+        <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva as mercadorias que estão sendo transferidas"></textarea>
       </div>
 
       <!-- Número da Transferência -->
@@ -121,10 +153,16 @@
       </div>
 
       <div id="success-message">Formulário enviado com sucesso!</div>
+      <div id="error-message"></div>
+      
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p>Enviando dados, por favor aguarde...</p>
+      </div>
 
       <div class="submit-buttons">
         <button type="reset" class="clear-button">Limpar formulário</button>
-        <button type="submit" class="submit-button">Enviar</button>
+        <button type="submit" class="submit-button" id="submit-button">Enviar</button>
       </div>
     </form>
   </div>
@@ -133,7 +171,9 @@
     function atualizarEmail() {
       const emailInput = document.getElementById('email');
       const filialOrigem = document.getElementById('filial-origem').value;
+      const filialDestinoSelect = document.getElementById('filial-destino');
 
+      // Atualiza email com base na filial de origem
       const emailPorFilial = {
         AATUR: "hs.operacoes.loja@gmail.com",
         FLORIANO: "hs.operacoes.loja@gmail.com",
@@ -145,16 +185,68 @@
       };
 
       emailInput.value = emailPorFilial[filialOrigem] || "";
+      
+      // Desabilita a filial de origem na seleção de destino
+      Array.from(filialDestinoSelect.options).forEach(option => {
+        option.disabled = option.value === filialOrigem;
+      });
+      
+      // Reseta a seleção se for a mesma filial
+      if (filialDestinoSelect.value === filialOrigem) {
+        filialDestinoSelect.value = "";
+      }
     }
 
-    window.onload = function () {
-      google.script.run.withSuccessHandler(function(numeroAtual) {
-        document.getElementById('numero-transferencia').value = numeroAtual;
-      }).obterNumeroTransferencia();
+    window.onload = function() {
+      // Carrega o número da transferência
+      google.script.run
+        .withSuccessHandler(function(numeroAtual) {
+          document.getElementById('numero-transferencia').value = numeroAtual;
+        })
+        .withFailureHandler(function(error) {
+          console.error("Erro ao obter número:", error);
+          document.getElementById('numero-transferencia').value = "TRF-001";
+          document.getElementById('error-message').textContent = "Erro ao carregar número da transferência. Use TRF-001 como fallback.";
+          document.getElementById('error-message').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('error-message').style.display = 'none';
+          }, 5000);
+        })
+        .obterNumeroTransferencia();
+        
+      // Configura o evento de change para a filial de origem
+      document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
     };
 
     document.getElementById('transfer-form').addEventListener('submit', function(event) {
       event.preventDefault();
+      
+      // Validação básica
+      if (!this.checkValidity()) {
+        document.getElementById('error-message').textContent = "Por favor, preencha todos os campos obrigatórios!";
+        document.getElementById('error-message').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('error-message').style.display = 'none';
+        }, 5000);
+        return;
+      }
+      
+      // Verifica se origem e destino são diferentes
+      const origem = document.getElementById('filial-origem').value;
+      const destino = document.getElementById('filial-destino').value;
+      
+      if (origem === destino) {
+        document.getElementById('error-message').textContent = "A filial de origem e destino devem ser diferentes!";
+        document.getElementById('error-message').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('error-message').style.display = 'none';
+        }, 5000);
+        return;
+      }
+
+      // Mostra loading
+      document.querySelector('.loading').style.display = 'block';
+      document.getElementById('submit-button').disabled = true;
 
       const form = event.target;
       const dados = {
@@ -165,14 +257,35 @@
         numeroTransferencia: form.numeroTransferencia.value
       };
 
-      google.script.run.withSuccessHandler(function(novoNumero) {
-        document.getElementById("success-message").style.display = 'block';
-        setTimeout(function() {
-          document.getElementById("success-message").style.display = 'none';
-          form.reset();
-          document.getElementById('numero-transferencia').value = novoNumero;
-        }, 2000);
-      }).processarFormulario(dados);
+      // Envia os dados
+      google.script.run
+        .withSuccessHandler(function(novoNumero) {
+          document.getElementById("success-message").style.display = 'block';
+          document.querySelector('.loading').style.display = 'none';
+          
+          setTimeout(function() {
+            document.getElementById("success-message").style.display = 'none';
+            form.reset();
+            document.getElementById('numero-transferencia').value = novoNumero;
+            document.getElementById('submit-button').disabled = false;
+            // Mantém o email preenchido se a filial for selecionada novamente
+            if (document.getElementById('filial-origem').value) {
+              atualizarEmail();
+            }
+          }, 3000);
+        })
+        .withFailureHandler(function(error) {
+          console.error("Erro ao enviar:", error);
+          document.querySelector('.loading').style.display = 'none';
+          document.getElementById('submit-button').disabled = false;
+          
+          document.getElementById('error-message').textContent = "Erro ao enviar formulário: " + error.message;
+          document.getElementById('error-message').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('error-message').style.display = 'none';
+          }, 5000);
+        })
+        .processarFormulario(dados);
     });
   </script>
 </body>
