@@ -105,7 +105,7 @@
             <!-- Filial Origem -->
             <div class="question-container">
                 <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
-                <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
+                <select name="filial-origem" id="filial-origem" required onchange="atualizarEmail()">
                     <option value="" disabled selected>Selecione</option>
                     <option value="AATUR">AATUR</option>
                     <option value="FLORIANO">FLORIANO</option>
@@ -120,7 +120,7 @@
             <!-- Filial Destino -->
             <div class="question-container">
                 <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
-                <select name="filialDestino" required>
+                <select name="filial-destino" required>
                     <option value="" disabled selected>Selecione</option>
                     <option value="AATUR">AATUR</option>
                     <option value="FLORIANO">FLORIANO</option>
@@ -150,6 +150,7 @@
             const emailInput = document.getElementById('email');
             const filialOrigem = document.getElementById('filial-origem').value;
 
+            // Lógica de e-mail automático com base na filial (padrão para todos no momento)
             const emailPorFilial = {
                 AATUR: "hs.operacoes.loja@gmail.com",
                 FLORIANO: "hs.operacoes.loja@gmail.com",
