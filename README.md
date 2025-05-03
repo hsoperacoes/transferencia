@@ -5,7 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRANSFERÊNCIA ENTRE LOJAS</title>
     <style>
-        /* Seu código de estilo permanece igual */
+        /* Layout anterior restaurado */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            width: 50%;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-title {
+            font-size: 24px;
+            color: #333;
+        }
+        .question-container {
+            margin-bottom: 15px;
+        }
+        .question-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .required-star {
+            color: red;
+        }
+        input[type="email"], input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .submit-buttons {
+            text-align: center;
+        }
+        .submit-button, .clear-button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-button:hover, .clear-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +141,18 @@
 
             emailInput.value = emailPorFilial[filialOrigem] || "";
         }
+
+        // Função para carregar o número da transferência quando o formulário for carregado
+        function carregarNumeroTransferencia() {
+            fetch("/getTransferNumber")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("num-transferencia").value = data.numTransferencia;
+                });
+        }
+
+        // Chama a função ao carregar a página
+        window.onload = carregarNumeroTransferencia;
     </script>
 </body>
 </html>
