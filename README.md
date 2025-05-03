@@ -150,7 +150,6 @@
             const emailInput = document.getElementById('email');
             const filialOrigem = document.getElementById('filial-origem').value;
 
-            // Lógica de e-mail automático com base na filial origem (padrão para todos por enquanto)
             const emailPorFilial = {
                 AATUR: "hs.operacoes.loja@gmail.com",
                 FLORIANO: "hs.operacoes.loja@gmail.com",
