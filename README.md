@@ -41,59 +41,91 @@
       margin: 5px 0 20px 0;
       border: 1px solid #ccc;
       border-radius: 4px;
+      box-sizing: border-box;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
     }
     .submit-buttons {
       text-align: center;
+      margin-top: 30px;
     }
     .submit-button, .clear-button {
-      padding: 10px 20px;
-      margin: 5px;
+      padding: 12px 25px;
+      margin: 0 10px;
       border: none;
+      border-radius: 4px;
       background-color: #4CAF50;
       color: white;
       font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-    .submit-button:hover, .clear-button:hover {
+    .clear-button {
+      background-color: #f44336;
+    }
+    .submit-button:hover {
       background-color: #45a049;
     }
+    .clear-button:hover {
+      background-color: #d32f2f;
+    }
     #success-message {
-      color: green;
+      color: #2e7d32;
       font-weight: bold;
       text-align: center;
       display: none;
       margin: 20px 0;
-      padding: 10px;
+      padding: 15px;
       background-color: #e8f5e9;
       border-radius: 4px;
+      border-left: 5px solid #2e7d32;
     }
     #error-message {
-      color: red;
+      color: #c62828;
       font-weight: bold;
       text-align: center;
       display: none;
       margin: 20px 0;
-      padding: 10px;
+      padding: 15px;
       background-color: #ffebee;
       border-radius: 4px;
+      border-left: 5px solid #c62828;
     }
-    .loading {
+    .loading-overlay {
       display: none;
-      text-align: center;
-      margin: 20px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
     }
-    .loading-spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #4CAF50;
+    .loading-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #4CAF50;
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 50px;
+      height: 50px;
       animation: spin 1s linear infinite;
-      margin: 0 auto;
+      margin: 0 auto 20px;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -143,7 +175,7 @@
       <!-- Mercadorias -->
       <div class="question-container">
         <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
-        <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva as mercadorias que estão sendo transferidas"></textarea>
+        <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva detalhadamente as mercadorias que estão sendo transferidas"></textarea>
       </div>
 
       <!-- Número da Transferência -->
@@ -152,13 +184,11 @@
         <input type="text" id="numero-transferencia" name="numeroTransferencia" readonly>
       </div>
 
-      <div id="success-message">Formulário enviado com sucesso!</div>
-      <div id="error-message"></div>
-      
-      <div class="loading">
-        <div class="loading-spinner"></div>
-        <p>Enviando dados, por favor aguarde...</p>
+      <!-- Mensagens de feedback -->
+      <div id="success-message">
+        <i class="fas fa-check-circle"></i> Formulário enviado com sucesso!
       </div>
+      <div id="error-message"></div>
 
       <div class="submit-buttons">
         <button type="reset" class="clear-button">Limpar formulário</button>
@@ -167,13 +197,22 @@
     </form>
   </div>
 
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <h3>Processando sua transferência...</h3>
+      <p>Aguarde enquanto enviamos os dados.</p>
+    </div>
+  </div>
+
   <script>
+    // Função para atualizar o email com base na filial selecionada
     function atualizarEmail() {
-      const emailInput = document.getElementById('email');
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
-
-      // Atualiza email com base na filial de origem
+      
+      // Mapeamento de emails por filial
       const emailPorFilial = {
         AATUR: "hs.operacoes.loja@gmail.com",
         FLORIANO: "hs.operacoes.loja@gmail.com",
@@ -183,8 +222,9 @@
         JA: "hs.operacoes.loja@gmail.com",
         JE: "hs.operacoes.loja@gmail.com"
       };
-
-      emailInput.value = emailPorFilial[filialOrigem] || "";
+      
+      // Atualiza o campo de email
+      document.getElementById('email').value = emailPorFilial[filialOrigem] || "";
       
       // Desabilita a filial de origem na seleção de destino
       Array.from(filialDestinoSelect.options).forEach(option => {
@@ -197,8 +237,23 @@
       }
     }
 
-    window.onload = function() {
-      // Carrega o número da transferência
+    // Quando o DOM estiver completamente carregado
+    document.addEventListener('DOMContentLoaded', function() {
+      // Carrega o número inicial da transferência
+      carregarNumeroTransferencia();
+      
+      // Configura o evento de submit do formulário
+      document.getElementById('transfer-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        enviarFormulario();
+      });
+      
+      // Configura o evento de change para a filial de origem
+      document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
+    });
+
+    // Função para carregar o número da transferência
+    function carregarNumeroTransferencia() {
       google.script.run
         .withSuccessHandler(function(numeroAtual) {
           document.getElementById('numero-transferencia').value = numeroAtual;
@@ -206,28 +261,19 @@
         .withFailureHandler(function(error) {
           console.error("Erro ao obter número:", error);
           document.getElementById('numero-transferencia').value = "TRF-001";
-          document.getElementById('error-message').textContent = "Erro ao carregar número da transferência. Use TRF-001 como fallback.";
-          document.getElementById('error-message').style.display = 'block';
-          setTimeout(() => {
-            document.getElementById('error-message').style.display = 'none';
-          }, 5000);
+          mostrarMensagemErro("Erro ao carregar número da transferência. Usando número padrão.");
         })
         .obterNumeroTransferencia();
-        
-      // Configura o evento de change para a filial de origem
-      document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
-    };
+    }
 
-    document.getElementById('transfer-form').addEventListener('submit', function(event) {
-      event.preventDefault();
+    // Função para enviar o formulário
+    function enviarFormulario() {
+      const form = document.getElementById('transfer-form');
+      const submitButton = document.getElementById('submit-button');
       
       // Validação básica
-      if (!this.checkValidity()) {
-        document.getElementById('error-message').textContent = "Por favor, preencha todos os campos obrigatórios!";
-        document.getElementById('error-message').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('error-message').style.display = 'none';
-        }, 5000);
+      if (!form.checkValidity()) {
+        mostrarMensagemErro("Por favor, preencha todos os campos obrigatórios!");
         return;
       }
       
@@ -236,57 +282,71 @@
       const destino = document.getElementById('filial-destino').value;
       
       if (origem === destino) {
-        document.getElementById('error-message').textContent = "A filial de origem e destino devem ser diferentes!";
-        document.getElementById('error-message').style.display = 'block';
-        setTimeout(() => {
-          document.getElementById('error-message').style.display = 'none';
-        }, 5000);
+        mostrarMensagemErro("A filial de origem e destino devem ser diferentes!");
         return;
       }
 
-      // Mostra loading
-      document.querySelector('.loading').style.display = 'block';
-      document.getElementById('submit-button').disabled = true;
-
-      const form = event.target;
+      // Prepara os dados do formulário
       const dados = {
         email: form.email.value,
-        filialOrigem: form.filialOrigem.value,
-        filialDestino: form.filialDestino.value,
+        filialOrigem: origem,
+        filialDestino: destino,
         mercadorias: form.mercadorias.value,
         numeroTransferencia: form.numeroTransferencia.value
       };
 
-      // Envia os dados
+      // Mostra o loading
+      mostrarLoading(true);
+      submitButton.disabled = true;
+
+      // Envia os dados para o Google Apps Script
       google.script.run
         .withSuccessHandler(function(novoNumero) {
-          document.getElementById("success-message").style.display = 'block';
-          document.querySelector('.loading').style.display = 'none';
+          mostrarMensagemSucesso();
+          document.getElementById('numero-transferencia').value = novoNumero;
           
+          // Esconde o loading após 1 segundo
           setTimeout(function() {
-            document.getElementById("success-message").style.display = 'none';
-            form.reset();
-            document.getElementById('numero-transferencia').value = novoNumero;
-            document.getElementById('submit-button').disabled = false;
-            // Mantém o email preenchido se a filial for selecionada novamente
-            if (document.getElementById('filial-origem').value) {
-              atualizarEmail();
-            }
-          }, 3000);
+            mostrarLoading(false);
+            submitButton.disabled = false;
+          }, 1000);
         })
         .withFailureHandler(function(error) {
-          console.error("Erro ao enviar:", error);
-          document.querySelector('.loading').style.display = 'none';
-          document.getElementById('submit-button').disabled = false;
-          
-          document.getElementById('error-message').textContent = "Erro ao enviar formulário: " + error.message;
-          document.getElementById('error-message').style.display = 'block';
-          setTimeout(() => {
-            document.getElementById('error-message').style.display = 'none';
-          }, 5000);
+          console.error("Erro ao enviar formulário:", error);
+          mostrarMensagemErro("Erro ao enviar formulário: " + error.message);
+          mostrarLoading(false);
+          submitButton.disabled = false;
         })
         .processarFormulario(dados);
-    });
+    }
+
+    // Função para mostrar/ocultar o loading
+    function mostrarLoading(mostrar) {
+      document.getElementById('loading-overlay').style.display = mostrar ? 'flex' : 'none';
+    }
+
+    // Função para mostrar mensagem de sucesso
+    function mostrarMensagemSucesso() {
+      const successMsg = document.getElementById('success-message');
+      successMsg.style.display = 'block';
+      
+      // Esconde a mensagem após 5 segundos
+      setTimeout(function() {
+        successMsg.style.display = 'none';
+      }, 5000);
+    }
+
+    // Função para mostrar mensagem de erro
+    function mostrarMensagemErro(mensagem) {
+      const errorMsg = document.getElementById('error-message');
+      errorMsg.textContent = mensagem;
+      errorMsg.style.display = 'block';
+      
+      // Esconde a mensagem após 5 segundos
+      setTimeout(function() {
+        errorMsg.style.display = 'none';
+      }, 5000);
+    }
   </script>
 </body>
 </html>
