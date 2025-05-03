@@ -1,128 +1,178 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Transferência entre Filiais</title>
+  <meta charset="UTF-8">
+  <title>Transferência entre Lojas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
+    .form-container {
+      width: 50%;
+      margin: 50px auto;
+      background-color: white;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-    h2 {
+    .form-header {
       text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-title {
+      font-size: 24px;
       color: #333;
     }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
+    .question-container {
+      margin-bottom: 15px;
     }
-    select, textarea, input[type="text"] {
+    .question-title {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    .required-star {
+      color: red;
+    }
+    input[type="email"], input[type="text"], select, textarea {
       width: 100%;
       padding: 10px;
-      margin-top: 5px;
+      margin: 5px 0 20px 0;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
+      border-radius: 4px;
     }
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .limpar {
-      background-color: #4CAF50;
-    }
-    .enviar {
-      background-color: #2196F3;
-    }
-    .mensagem {
-      margin-top: 15px;
+    .submit-buttons {
       text-align: center;
-      font-weight: bold;
+    }
+    .submit-button, .clear-button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .submit-button:hover, .clear-button:hover {
+      background-color: #45a049;
+    }
+    #success-message {
       color: green;
+      font-weight: bold;
+      text-align: center;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>TRANSFERÊNCIA ENTRE FILIAIS</h2>
-    <form id="formTransferencia">
-      <label for="filialOrigem">Filial Origem *</label>
-      <select id="filialOrigem" name="filialOrigem" required>
-        <option value="">Selecione</option>
-        <option value="Loja 1">Loja 1</option>
-        <option value="Loja 2">Loja 2</option>
-        <option value="Loja 3">Loja 3</option>
-      </select>
+  <div class="form-container">
+    <div class="form-header">
+      <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
+    </div>
 
-      <label for="filialDestino">Filial Destino *</label>
-      <select id="filialDestino" name="filialDestino" required>
-        <option value="">Selecione</option>
-        <option value="Loja 1">Loja 1</option>
-        <option value="Loja 2">Loja 2</option>
-        <option value="Loja 3">Loja 3</option>
-      </select>
-
-      <label for="mercadorias">Mercadorias que estão saindo *</label>
-      <textarea id="mercadorias" name="mercadorias" rows="4" required></textarea>
-
-      <label for="numeroTransferencia">Número da Transferência</label>
-      <input type="text" id="numeroTransferencia" name="numeroTransferencia" readonly />
-
-      <div class="buttons">
-        <button type="reset" class="limpar">Limpar formulário</button>
-        <button type="submit" class="enviar">Enviar</button>
+    <form id="transfer-form">
+      <!-- Campo de e-mail -->
+      <div class="question-container">
+        <div class="question-title">Enviar por email <span class="required-star">*</span></div>
+        <input type="email" name="email" id="email" required readonly>
       </div>
 
-      <div id="mensagem" class="mensagem"></div>
+      <!-- Filial Origem -->
+      <div class="question-container">
+        <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
+        <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
+          <option value="" disabled selected>Selecione</option>
+          <option value="AATUR">AATUR</option>
+          <option value="FLORIANO">FLORIANO</option>
+          <option value="JOTA">JOTA</option>
+          <option value="MOGA">MOGA</option>
+          <option value="PONTO">PONTO</option>
+          <option value="JA">JA</option>
+          <option value="JE">JE</option>
+        </select>
+      </div>
+
+      <!-- Filial Destino -->
+      <div class="question-container">
+        <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
+        <select name="filialDestino" required>
+          <option value="" disabled selected>Selecione</option>
+          <option value="AATUR">AATUR</option>
+          <option value="FLORIANO">FLORIANO</option>
+          <option value="JOTA">JOTA</option>
+          <option value="MOGA">MOGA</option>
+          <option value="PONTO">PONTO</option>
+          <option value="JA">JA</option>
+          <option value="JE">JE</option>
+        </select>
+      </div>
+
+      <!-- Mercadorias -->
+      <div class="question-container">
+        <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
+        <textarea name="mercadorias" required placeholder="Sua resposta"></textarea>
+      </div>
+
+      <!-- Número da Transferência -->
+      <div class="question-container">
+        <div class="question-title">NÚMERO DA TRANSFERÊNCIA</div>
+        <input type="text" id="numero-transferencia" name="numeroTransferencia" readonly>
+      </div>
+
+      <div id="success-message">Formulário enviado com sucesso!</div>
+
+      <div class="submit-buttons">
+        <button type="reset" class="clear-button">Limpar formulário</button>
+        <button type="submit" class="submit-button">Enviar</button>
+      </div>
     </form>
   </div>
 
   <script>
-    // Geração do número da transferência ao carregar a página
-    document.addEventListener("DOMContentLoaded", function () {
-      gerarNumeroTransferencia();
-    });
+    function atualizarEmail() {
+      const emailInput = document.getElementById('email');
+      const filialOrigem = document.getElementById('filial-origem').value;
 
-    function gerarNumeroTransferencia() {
-      const campoNumero = document.getElementById("numeroTransferencia");
-      const agora = new Date();
-      const numero = `TRF-${agora.getFullYear()}${(agora.getMonth() + 1).toString().padStart(2, "0")}${agora.getDate().toString().padStart(2, "0")}-${Math.floor(Math.random() * 9000 + 1000)}`;
-      campoNumero.value = numero;
+      const emailPorFilial = {
+        AATUR: "hs.operacoes.loja@gmail.com",
+        FLORIANO: "hs.operacoes.loja@gmail.com",
+        JOTA: "hs.operacoes.loja@gmail.com",
+        MOGA: "hs.operacoes.loja@gmail.com",
+        PONTO: "hs.operacoes.loja@gmail.com",
+        JA: "hs.operacoes.loja@gmail.com",
+        JE: "hs.operacoes.loja@gmail.com"
+      };
+
+      emailInput.value = emailPorFilial[filialOrigem] || "";
     }
 
-    // Submissão do formulário
-    document.getElementById("formTransferencia").addEventListener("submit", function (e) {
-      e.preventDefault(); // Impede envio real
+    window.onload = function () {
+      google.script.run.withSuccessHandler(function(numeroAtual) {
+        document.getElementById('numero-transferencia').value = numeroAtual;
+      }).obterNumeroTransferencia();
+    };
 
-      // Simular envio e mostrar mensagem de sucesso
-      document.getElementById("mensagem").textContent = "Formulário enviado com sucesso!";
-      
-      // Aguarda 2 segundos, limpa e regenera número
-      setTimeout(() => {
-        this.reset();
-        gerarNumeroTransferencia();
-        document.getElementById("mensagem").textContent = "";
-      }, 2000);
+    document.getElementById('transfer-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const dados = {
+        email: form.email.value,
+        filialOrigem: form.filialOrigem.value,
+        filialDestino: form.filialDestino.value,
+        mercadorias: form.mercadorias.value,
+        numeroTransferencia: form.numeroTransferencia.value
+      };
+
+      google.script.run.withSuccessHandler(function(novoNumero) {
+        document.getElementById("success-message").style.display = 'block';
+        setTimeout(function() {
+          document.getElementById("success-message").style.display = 'none';
+          form.reset();
+          document.getElementById('numero-transferencia').value = novoNumero;
+        }, 2000);
+      }).processarFormulario(dados);
     });
   </script>
 </body>
