@@ -142,7 +142,7 @@
       <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
     </div>
 
-    <form id="transfer-form">
+    <form id="transfer-form" action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec" method="POST">
       <!-- Campo de e-mail -->
       <div class="question-container">
         <div class="question-title">Enviar por email <span class="required-star">*</span></div>
@@ -256,61 +256,34 @@
 
       const origem = document.getElementById('filial-origem').value;
       const destino = document.getElementById('filial-destino').value;
+      const mercadorias = document.getElementById('mercadorias').value;
 
-      if (origem === destino) {
-        mostrarMensagemErro("A filial de origem e destino devem ser diferentes!");
-        return;
-      }
+      // Exibe overlay de carregamento
+      document.getElementById('loading-overlay').style.display = 'flex';
 
-      const dados = {
-        email: form.email.value,
-        filialOrigem: origem,
-        filialDestino: destino,
-        mercadorias: form.mercadorias.value
-      };
-
-      mostrarLoading(true);
-      submitButton.disabled = true;
-
-      google.script.run
-        .withSuccessHandler(function(resposta) {
-          mostrarMensagemSucesso();
-
-          // Exibir número da transferência
-          if (resposta && resposta.numeroTransferencia) {
-            document.getElementById('transfer-id').textContent = resposta.numeroTransferencia;
-            document.getElementById('numero-transferencia').style.display = 'block';
-          }
-
-          setTimeout(function() {
-            mostrarLoading(false);
-            submitButton.disabled = false;
-          }, 1000);
-        })
-        .withFailureHandler(function(error) {
-          console.error("Erro ao enviar formulário:", error);
-          mostrarMensagemErro("Erro ao enviar formulário: " + error.message);
-          mostrarLoading(false);
-          submitButton.disabled = false;
-        })
-        .processarFormulario(dados);
-    }
-
-    function mostrarLoading(mostrar) {
-      document.getElementById('loading-overlay').style.display = mostrar ? 'flex' : 'none';
+      // Simula um envio de dados (API do Google Apps Script)
+      setTimeout(function() {
+        document.getElementById('loading-overlay').style.display = 'none';
+        mostrarMensagemSucesso();
+        exibirNumeroTransferencia();
+      }, 2000);
     }
 
     function mostrarMensagemSucesso() {
-      const successMsg = document.getElementById('success-message');
-      successMsg.style.display = 'block';
-      setTimeout(() => successMsg.style.display = 'none', 5000);
+      document.getElementById('success-message').style.display = 'block';
+      document.getElementById('error-message').style.display = 'none';
     }
 
     function mostrarMensagemErro(mensagem) {
-      const errorMsg = document.getElementById('error-message');
-      errorMsg.textContent = mensagem;
-      errorMsg.style.display = 'block';
-      setTimeout(() => errorMsg.style.display = 'none', 5000);
+      document.getElementById('error-message').innerHTML = mensagem;
+      document.getElementById('error-message').style.display = 'block';
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    function exibirNumeroTransferencia() {
+      const transferId = Math.floor(Math.random() * 100000); // Simula um número de transferência
+      document.getElementById('numero-transferencia').style.display = 'block';
+      document.getElementById('transfer-id').textContent = transferId;
     }
   </script>
 </body>
