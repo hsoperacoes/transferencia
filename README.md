@@ -166,10 +166,10 @@
         <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
         <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
           <option value="" disabled selected>Selecione</option>
-          <option value="AATUR">AATUR</option>
+          <option value="ARTUR">AATUR</option>
           <option value="FLORIANO">FLORIANO</option>
           <option value="JOTA">JOTA</option>
-          <option value="MOGA">MOGA</option>
+          <option value="MODA">MOGA</option>
           <option value="PONTO">PONTO</option>
           <option value="JA">JA</option>
           <option value="JE">JE</option>
@@ -180,10 +180,10 @@
         <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
         <select name="filialDestino" id="filial-destino" required>
           <option value="" disabled selected>Selecione</option>
-          <option value="AATUR">AATUR</option>
+          <option value="ARTUR">AATUR</option>
           <option value="FLORIANO">FLORIANO</option>
           <option value="JOTA">JOTA</option>
-          <option value="MOGA">MOGA</option>
+          <option value="MODA">MOGA</option>
           <option value="PONTO">PONTO</option>
           <option value="JA">JA</option>
           <option value="JE">JE</option>
@@ -192,7 +192,7 @@
 
       <div class="question-container">
         <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
-        <textarea name="mercadorias" id="mercadorias" required placeholder="Digite os códigos de barras, um por linha" oninput="contarLinhas()"></textarea>
+        <textarea name="mercadorias" id="mercadorias" required placeholder="Inclua aqui os códigos de barras." oninput="contarLinhas()"></textarea>
       </div>
 
       <div id="barcode-count" class="barcode-count">Total de itens: <span id="total-itens" class="count-number">0</span></div>
@@ -224,11 +224,11 @@
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
       const emailPorFilial = {
-        AATUR: "hs.operacoes.loja@gmail.com",
-        FLORIANO: "hs.operacoes.loja@gmail.com",
-        JOTA: "hs.operacoes.loja@gmail.com",
-        MOGA: "hs.operacoes.loja@gmail.com",
-        PONTO: "hs.operacoes.loja@gmail.com",
+        ARTUR: "hs.operacoes.loja@gmail.com",
+        FLORIANO: "hs.uberlandia.floriano@gmail.com",
+        JOTA: "brunohenzo09@gmail.com",
+        MODA: "dlaire28@gmail.com",
+        PONTO: "soniameiry@gmail.com",
         JA: "hs.operacoes.loja@gmail.com",
         JE: "hs.operacoes.loja@gmail.com"
       };
