@@ -138,18 +138,6 @@
       text-align: center;
     }
 
-    .barcode-input {
-      margin-top: 10px;
-    }
-
-    .barcode-list {
-      margin-top: 10px;
-    }
-
-    .barcode-item {
-      margin-bottom: 5px;
-    }
-
     .barcode-count {
       font-size: 16px;
       margin-top: 10px;
@@ -199,16 +187,10 @@
 
       <div class="question-container">
         <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
-        <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva detalhadamente as mercadorias que estão sendo transferidas"></textarea>
+        <textarea name="mercadorias" id="mercadorias" required placeholder="Digite os códigos de barras, um por linha" oninput="contarLinhas()"></textarea>
       </div>
 
-      <!-- Novos campos para códigos de barras -->
-      <div class="question-container barcode-input">
-        <div class="question-title">CÓDIGOS DE BARRAS <span class="required-star">*</span></div>
-        <input type="text" id="barcode-input" placeholder="Digite o código de barras" oninput="adicionarCodigoDeBarras()">
-      </div>
-
-      <div id="barcode-list" class="barcode-list"></div>
+      <!-- Contagem de Códigos de Barras -->
       <div id="barcode-count" class="barcode-count">Total de códigos de barras: 0</div>
 
       <div id="success-message">Formulário enviado com sucesso!</div>
@@ -259,6 +241,14 @@
       }
     }
 
+    // Função para contar as linhas no campo de mercadorias
+    function contarLinhas() {
+      const mercadorias = document.getElementById('mercadorias').value;
+      const linhas = mercadorias.split('\n').filter(linha => linha.trim() !== '');
+      const countElement = document.getElementById('barcode-count');
+      countElement.textContent = `Total de códigos de barras: ${linhas.length}`;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('transfer-form').addEventListener('submit', function (event) {
         event.preventDefault();
@@ -267,27 +257,6 @@
 
       document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
     });
-
-    // Função para adicionar código de barras
-    function adicionarCodigoDeBarras() {
-      const input = document.getElementById('barcode-input');
-      const barcodeList = document.getElementById('barcode-list');
-      const barcodeCount = document.getElementById('barcode-count');
-      const barcodeValue = input.value.trim();
-
-      if (barcodeValue && !barcodeList.querySelector(`#barcode-${barcodeValue}`)) {
-        const newItem = document.createElement('div');
-        newItem.classList.add('barcode-item');
-        newItem.id = `barcode-${barcodeValue}`;
-        newItem.textContent = barcodeValue;
-        barcodeList.appendChild(newItem);
-        input.value = '';  // Limpa o campo de input após adicionar
-
-        // Atualiza a contagem de códigos de barras
-        const totalBarcodes = barcodeList.children.length;
-        barcodeCount.textContent = `Total de códigos de barras: ${totalBarcodes}`;
-      }
-    }
 
     // Função para enviar o formulário
     function enviarFormulario() {
