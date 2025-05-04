@@ -5,6 +5,9 @@
   <title>Transferência entre Lojas</title>
   <style>
     /* Estilos permanecem os mesmos */
+    #success-message, #error-message {
+      display: none; /* Esconde as mensagens inicialmente */
+    }
   </style>
 </head>
 <body>
