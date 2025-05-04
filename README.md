@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Transferência entre Lojas</title>
   <style>
-    /* Seu estilo permanece o mesmo */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -291,11 +290,7 @@
         if (responseData.numeroTransferencia) {
           mostrarMensagemSucesso();
           exibirNumeroTransferencia(responseData.numeroTransferencia);
-          
-          // Limpar o formulário após 5 segundos
-          setTimeout(() => {
-            limparFormulario();
-          }, 5000);
+          setTimeout(limparFormulario, 5000); // Limpa após 5 segundos
         } else {
           mostrarMensagemErro("Erro ao enviar: Resposta inválida do servidor.");
         }
@@ -324,12 +319,11 @@
       document.getElementById('transfer-id').textContent = numero;
     }
 
-    // Função para limpar o formulário após envio
+    // Função para limpar o formulário após 5 segundos
     function limparFormulario() {
       document.getElementById('transfer-form').reset();
-      document.getElementById('barcode-count').style.display = 'none';
-      document.getElementById('success-message').style.display = 'none';
-      document.getElementById('numero-transferencia').style.display = 'none';
+      document.getElementById('barcode-count').style.display = 'block'; // Voltar a mostrar a contagem de itens
+      document.getElementById('numero-transferencia').style.display = 'none'; // Esconder número da transferência
     }
   </script>
 </body>
