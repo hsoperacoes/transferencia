@@ -165,10 +165,10 @@
         <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
         <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
           <option value="" disabled selected>Selecione</option>
-          <option value="ARTUR">AATUR</option>
+          <option value="ARTUR">ATTUR</option>
           <option value="FLORIANO">FLORIANO</option>
           <option value="JOTA">JOTA</option>
-          <option value="MODA">MOGA</option>
+          <option value="MODA">MOFA</option>
           <option value="PONTO">PONTO</option>
           <option value="JA">JA</option>
           <option value="JE">JE</option>
@@ -179,10 +179,10 @@
         <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
         <select name="filialDestino" id="filial-destino" required>
           <option value="" disabled selected>Selecione</option>
-          <option value="ARTUR">AATUR</option>
+          <option value="ARTUR">ARTUR</option>
           <option value="FLORIANO">FLORIANO</option>
           <option value="JOTA">JOTA</option>
-          <option value="MODA">MOGA</option>
+          <option value="MODA">MODA</option>
           <option value="PONTO">PONTO</option>
           <option value="JA">JA</option>
           <option value="JE">JE</option>
