@@ -143,6 +143,11 @@
       margin-top: 10px;
       font-weight: bold;
     }
+
+    .count-number {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -191,7 +196,7 @@
       </div>
 
       <!-- Contagem de Códigos de Barras -->
-      <div id="barcode-count" class="barcode-count">Total de códigos de barras: 0</div>
+      <div id="barcode-count" class="barcode-count">Total de itens: <span id="total-itens" class="count-number">0</span></div>
 
       <div id="success-message">Formulário enviado com sucesso!</div>
       <div id="error-message"></div>
@@ -245,8 +250,8 @@
     function contarLinhas() {
       const mercadorias = document.getElementById('mercadorias').value;
       const linhas = mercadorias.split('\n').filter(linha => linha.trim() !== '');
-      const countElement = document.getElementById('barcode-count');
-      countElement.textContent = `Total de códigos de barras: ${linhas.length}`;
+      const countElement = document.getElementById('total-itens');
+      countElement.textContent = linhas.length;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -285,6 +290,7 @@
         if (responseData.numeroTransferencia) {
           mostrarMensagemSucesso();
           exibirNumeroTransferencia(responseData.numeroTransferencia);
+          limparFormulario();
         } else {
           mostrarMensagemErro("Erro ao enviar: Resposta inválida do servidor.");
         }
@@ -311,6 +317,12 @@
     function exibirNumeroTransferencia(numero) {
       document.getElementById('numero-transferencia').style.display = 'block';
       document.getElementById('transfer-id').textContent = numero;
+    }
+
+    // Função para limpar o formulário após envio
+    function limparFormulario() {
+      document.getElementById('transfer-form').reset();
+      document.getElementById('barcode-count').style.display = 'none';
     }
   </script>
 </body>
