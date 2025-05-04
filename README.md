@@ -127,6 +127,13 @@
     .hidden {
       display: none;
     }
+    #numero-transferencia {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #2e7d32;
+    }
   </style>
 </head>
 <body>
@@ -187,6 +194,11 @@
         <button type="submit" class="submit-button" id="submit-button">Enviar</button>
       </div>
     </form>
+
+    <!-- Número da Transferência -->
+    <div id="numero-transferencia">
+      Número da transferência: <strong id="transfer-id"></strong>
+    </div>
   </div>
 
   <!-- Loading Overlay -->
@@ -261,8 +273,15 @@
       submitButton.disabled = true;
 
       google.script.run
-        .withSuccessHandler(function() {
+        .withSuccessHandler(function(resposta) {
           mostrarMensagemSucesso();
+
+          // Exibir número da transferência
+          if (resposta && resposta.numeroTransferencia) {
+            document.getElementById('transfer-id').textContent = resposta.numeroTransferencia;
+            document.getElementById('numero-transferencia').style.display = 'block';
+          }
+
           setTimeout(function() {
             mostrarLoading(false);
             submitButton.disabled = false;
