@@ -157,7 +157,7 @@
 
     <form id="transfer-form">
       <div class="question-container">
-        <div class="question-title">Enviar por email <span class="required-star">*</span></div>
+        <div class="question-title">Email da filial de origem:(Preenchimento automatico) <span class="required-star">*</span></div>
         <input type="email" name="email" id="email" required readonly>
       </div>
 
