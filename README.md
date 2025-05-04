@@ -178,16 +178,8 @@
         <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva detalhadamente as mercadorias que estão sendo transferidas"></textarea>
       </div>
 
-      <!-- Número da Transferência -->
-      <div class="question-container">
-        <div class="question-title">NÚMERO DA TRANSFERÊNCIA</div>
-        <input type="text" id="numero-transferencia" name="numeroTransferencia" readonly>
-      </div>
-
       <!-- Mensagens de feedback -->
-      <div id="success-message">
-        <i class="fas fa-check-circle"></i> Formulário enviado com sucesso!
-      </div>
+      <div id="success-message">Formulário enviado com sucesso!</div>
       <div id="error-message"></div>
 
       <div class="submit-buttons">
@@ -207,12 +199,10 @@
   </div>
 
   <script>
-    // Função para atualizar o email com base na filial selecionada
     function atualizarEmail() {
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
       
-      // Mapeamento de emails por filial
       const emailPorFilial = {
         AATUR: "hs.operacoes.loja@gmail.com",
         FLORIANO: "hs.operacoes.loja@gmail.com",
@@ -223,89 +213,56 @@
         JE: "hs.operacoes.loja@gmail.com"
       };
       
-      // Atualiza o campo de email
       document.getElementById('email').value = emailPorFilial[filialOrigem] || "";
       
-      // Desabilita a filial de origem na seleção de destino
       Array.from(filialDestinoSelect.options).forEach(option => {
         option.disabled = option.value === filialOrigem;
       });
-      
-      // Reseta a seleção se for a mesma filial
+
       if (filialDestinoSelect.value === filialOrigem) {
         filialDestinoSelect.value = "";
       }
     }
 
-    // Quando o DOM estiver completamente carregado
     document.addEventListener('DOMContentLoaded', function() {
-      // Carrega o número inicial da transferência
-      carregarNumeroTransferencia();
-      
-      // Configura o evento de submit do formulário
       document.getElementById('transfer-form').addEventListener('submit', function(event) {
         event.preventDefault();
         enviarFormulario();
       });
-      
-      // Configura o evento de change para a filial de origem
+
       document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
     });
 
-    // Função para carregar o número da transferência
-    function carregarNumeroTransferencia() {
-      google.script.run
-        .withSuccessHandler(function(numeroAtual) {
-          document.getElementById('numero-transferencia').value = numeroAtual;
-        })
-        .withFailureHandler(function(error) {
-          console.error("Erro ao obter número:", error);
-          document.getElementById('numero-transferencia').value = "TRF-001";
-          mostrarMensagemErro("Erro ao carregar número da transferência. Usando número padrão.");
-        })
-        .obterNumeroTransferencia();
-    }
-
-    // Função para enviar o formulário
     function enviarFormulario() {
       const form = document.getElementById('transfer-form');
       const submitButton = document.getElementById('submit-button');
-      
-      // Validação básica
+
       if (!form.checkValidity()) {
         mostrarMensagemErro("Por favor, preencha todos os campos obrigatórios!");
         return;
       }
-      
-      // Verifica se origem e destino são diferentes
+
       const origem = document.getElementById('filial-origem').value;
       const destino = document.getElementById('filial-destino').value;
-      
+
       if (origem === destino) {
         mostrarMensagemErro("A filial de origem e destino devem ser diferentes!");
         return;
       }
 
-      // Prepara os dados do formulário
       const dados = {
         email: form.email.value,
         filialOrigem: origem,
         filialDestino: destino,
-        mercadorias: form.mercadorias.value,
-        numeroTransferencia: form.numeroTransferencia.value
+        mercadorias: form.mercadorias.value
       };
 
-      // Mostra o loading
       mostrarLoading(true);
       submitButton.disabled = true;
 
-      // Envia os dados para o Google Apps Script
       google.script.run
-        .withSuccessHandler(function(novoNumero) {
+        .withSuccessHandler(function() {
           mostrarMensagemSucesso();
-          document.getElementById('numero-transferencia').value = novoNumero;
-          
-          // Esconde o loading após 1 segundo
           setTimeout(function() {
             mostrarLoading(false);
             submitButton.disabled = false;
@@ -320,32 +277,21 @@
         .processarFormulario(dados);
     }
 
-    // Função para mostrar/ocultar o loading
     function mostrarLoading(mostrar) {
       document.getElementById('loading-overlay').style.display = mostrar ? 'flex' : 'none';
     }
 
-    // Função para mostrar mensagem de sucesso
     function mostrarMensagemSucesso() {
       const successMsg = document.getElementById('success-message');
       successMsg.style.display = 'block';
-      
-      // Esconde a mensagem após 5 segundos
-      setTimeout(function() {
-        successMsg.style.display = 'none';
-      }, 5000);
+      setTimeout(() => successMsg.style.display = 'none', 5000);
     }
 
-    // Função para mostrar mensagem de erro
     function mostrarMensagemErro(mensagem) {
       const errorMsg = document.getElementById('error-message');
       errorMsg.textContent = mensagem;
       errorMsg.style.display = 'block';
-      
-      // Esconde a mensagem após 5 segundos
-      setTimeout(function() {
-        errorMsg.style.display = 'none';
-      }, 5000);
+      setTimeout(() => errorMsg.style.display = 'none', 5000);
     }
   </script>
 </body>
