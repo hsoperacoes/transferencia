@@ -198,7 +198,7 @@
       <!-- Contagem de Códigos de Barras -->
       <div id="barcode-count" class="barcode-count">Total de itens: <span id="total-itens" class="count-number">0</span></div>
 
-      <div id="success-message">Formulário enviado com sucesso!</div>
+      <div id="success-message">Transferência enviada com sucesso!</div>
       <div id="error-message"></div>
 
       <div class="submit-buttons">
