@@ -195,7 +195,6 @@
         <textarea name="mercadorias" id="mercadorias" required placeholder="Digite os códigos de barras, um por linha" oninput="contarLinhas()"></textarea>
       </div>
 
-      <!-- Contagem de Códigos de Barras -->
       <div id="barcode-count" class="barcode-count">Total de itens: <span id="total-itens" class="count-number">0</span></div>
 
       <div id="success-message">Transferência enviada com sucesso!</div>
@@ -221,7 +220,6 @@
   </div>
 
   <script>
-    // Lógica de preenchimento de email baseado na filial de origem
     function atualizarEmail() {
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
@@ -236,7 +234,6 @@
       };
       document.getElementById('email').value = emailPorFilial[filialOrigem] || "";
 
-      // Desabilitar a filial de destino igual à origem
       Array.from(filialDestinoSelect.options).forEach(option => {
         option.disabled = option.value === filialOrigem;
       });
@@ -246,12 +243,10 @@
       }
     }
 
-    // Função para contar as linhas no campo de mercadorias
     function contarLinhas() {
       const mercadorias = document.getElementById('mercadorias').value;
       const linhas = mercadorias.split('\n').filter(linha => linha.trim() !== '');
-      const countElement = document.getElementById('total-itens');
-      countElement.textContent = linhas.length;
+      document.getElementById('total-itens').textContent = linhas.length;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -263,7 +258,6 @@
       document.getElementById('filial-origem').addEventListener('change', atualizarEmail);
     });
 
-    // Função para enviar o formulário
     function enviarFormulario() {
       const form = document.getElementById('transfer-form');
       if (!form.checkValidity()) {
@@ -278,9 +272,7 @@
 
       fetch("https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: data
       })
       .then(response => response.json())
@@ -290,7 +282,7 @@
         if (responseData.numeroTransferencia) {
           mostrarMensagemSucesso();
           exibirNumeroTransferencia(responseData.numeroTransferencia);
-          setTimeout(limparFormulario, 5000); // Limpa após 5 segundos
+          setTimeout(limparFormulario, 5000);
         } else {
           mostrarMensagemErro("Erro ao enviar: Resposta inválida do servidor.");
         }
@@ -301,7 +293,6 @@
       });
     }
 
-    // Funções para exibir mensagens
     function mostrarMensagemSucesso() {
       document.getElementById('success-message').style.display = 'block';
       document.getElementById('error-message').style.display = 'none';
@@ -313,17 +304,17 @@
       document.getElementById('success-message').style.display = 'none';
     }
 
-    // Função para exibir o número da transferência
     function exibirNumeroTransferencia(numero) {
       document.getElementById('numero-transferencia').style.display = 'block';
       document.getElementById('transfer-id').textContent = numero;
     }
 
-    // Função para limpar o formulário após 5 segundos
     function limparFormulario() {
       document.getElementById('transfer-form').reset();
-      document.getElementById('barcode-count').style.display = 'block'; // Voltar a mostrar a contagem de itens
-      document.getElementById('numero-transferencia').style.display = 'none'; // Esconder número da transferência
+      document.getElementById('barcode-count').style.display = 'block';
+      document.getElementById('numero-transferencia').style.display = 'none';
+      document.getElementById('total-itens').textContent = '0';
+      contarLinhas(); // Força atualização
     }
   </script>
 </body>
