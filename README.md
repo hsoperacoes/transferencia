@@ -5,6 +5,126 @@
   <title>Transferência entre Lojas</title>
   <style>
     /* Estilos permanecem os mesmos */
+    .form-container {
+      width: 80%;
+      max-width: 600px;
+      margin: 0 auto;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .question-container {
+      margin-bottom: 15px;
+    }
+
+    .question-title {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .required-star {
+      color: red;
+    }
+
+    select, textarea, input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .submit-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .clear-button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .submit-button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    /* Success and Error messages */
+    #success-message, #error-message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    #success-message {
+      color: green;
+      display: none;
+    }
+
+    #error-message {
+      color: red;
+      display: none;
+    }
+
+    #numero-transferencia {
+      margin-top: 20px;
+      font-size: 18px;
+      display: none;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: white;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -13,7 +133,7 @@
       <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
     </div>
 
-    <form id="transfer-form" method="POST">
+    <form id="transfer-form" method="POST" action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec">
       <!-- Campo de e-mail -->
       <div class="question-container">
         <div class="question-title">Enviar por email <span class="required-star">*</span></div>
