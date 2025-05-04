@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Transferência entre Lojas</title>
   <style>
-    /* Estilos permanecem os mesmos */
+    /* (os estilos permanecem os mesmos, sem alterações) */
     .form-container {
       width: 80%;
       max-width: 600px;
@@ -15,103 +15,42 @@
       border-radius: 8px;
     }
 
-    .form-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-title {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .question-container {
-      margin-bottom: 15px;
-    }
-
-    .question-title {
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .required-star {
-      color: red;
-    }
-
+    .form-header { text-align: center; margin-bottom: 20px; }
+    .form-title { font-size: 24px; font-weight: bold; }
+    .question-container { margin-bottom: 15px; }
+    .question-title { font-size: 16px; margin-bottom: 5px; }
+    .required-star { color: red; }
     select, textarea, input {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      width: 100%; padding: 8px; margin: 5px 0;
+      border: 1px solid #ddd; border-radius: 4px;
     }
-
     .submit-buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
+      display: flex; justify-content: space-between; margin-top: 20px;
     }
-
     .clear-button {
-      background-color: #f44336;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 4px;
+      background-color: #f44336; color: white; border: none;
+      padding: 10px; cursor: pointer; border-radius: 4px;
     }
-
     .submit-button {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 4px;
+      background-color: #4CAF50; color: white; border: none;
+      padding: 10px; cursor: pointer; border-radius: 4px;
     }
-
-    /* Success and Error messages */
     #success-message, #error-message {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 16px;
+      text-align: center; margin-top: 20px; font-size: 16px;
     }
-
-    #success-message {
-      color: green;
-      display: none;
-    }
-
-    #error-message {
-      color: red;
-      display: none;
-    }
-
+    #success-message { color: green; display: none; }
+    #error-message { color: red; display: none; }
     #numero-transferencia {
-      margin-top: 20px;
-      font-size: 18px;
-      display: none;
+      margin-top: 20px; font-size: 18px; display: none;
     }
-
-    /* Loading Overlay */
     .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); display: none;
+      justify-content: center; align-items: center; z-index: 999;
     }
-
     .loading-content {
-      text-align: center;
-      color: white;
+      text-align: center; color: white;
     }
-
     .spinner {
       border: 4px solid #f3f3f3;
       border-top: 4px solid #3498db;
@@ -120,7 +59,6 @@
       height: 50px;
       animation: spin 2s linear infinite;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -133,14 +71,12 @@
       <h1 class="form-title">TRANSFERÊNCIA ENTRE LOJAS</h1>
     </div>
 
-    <form id="transfer-form" method="POST" action="https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec">
-      <!-- Campo de e-mail -->
+    <form id="transfer-form">
       <div class="question-container">
         <div class="question-title">Enviar por email <span class="required-star">*</span></div>
         <input type="email" name="email" id="email" required readonly>
       </div>
 
-      <!-- Filial Origem -->
       <div class="question-container">
         <div class="question-title">FILIAL ORIGEM <span class="required-star">*</span></div>
         <select name="filialOrigem" id="filial-origem" required onchange="atualizarEmail()">
@@ -155,7 +91,6 @@
         </select>
       </div>
 
-      <!-- Filial Destino -->
       <div class="question-container">
         <div class="question-title">FILIAL DESTINO <span class="required-star">*</span></div>
         <select name="filialDestino" id="filial-destino" required>
@@ -170,13 +105,11 @@
         </select>
       </div>
 
-      <!-- Mercadorias -->
       <div class="question-container">
         <div class="question-title">MERCADORIAS QUE ESTÃO SAINDO <span class="required-star">*</span></div>
         <textarea name="mercadorias" id="mercadorias" required placeholder="Descreva detalhadamente as mercadorias que estão sendo transferidas"></textarea>
       </div>
 
-      <!-- Mensagens de feedback -->
       <div id="success-message">Formulário enviado com sucesso!</div>
       <div id="error-message"></div>
 
@@ -186,13 +119,11 @@
       </div>
     </form>
 
-    <!-- Número da Transferência -->
     <div id="numero-transferencia">
       Número da transferência: <strong id="transfer-id"></strong>
     </div>
   </div>
 
-  <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-content">
       <div class="spinner"></div>
@@ -205,7 +136,6 @@
     function atualizarEmail() {
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
-      
       const emailPorFilial = {
         AATUR: "hs.operacoes.loja@gmail.com",
         FLORIANO: "hs.operacoes.loja@gmail.com",
@@ -215,9 +145,8 @@
         JA: "hs.operacoes.loja@gmail.com",
         JE: "hs.operacoes.loja@gmail.com"
       };
-      
       document.getElementById('email').value = emailPorFilial[filialOrigem] || "";
-      
+
       Array.from(filialDestinoSelect.options).forEach(option => {
         option.disabled = option.value === filialOrigem;
       });
@@ -227,8 +156,8 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('transfer-form').addEventListener('submit', function(event) {
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('transfer-form').addEventListener('submit', function (event) {
         event.preventDefault();
         enviarFormulario();
       });
@@ -238,8 +167,6 @@
 
     function enviarFormulario() {
       const form = document.getElementById('transfer-form');
-      const submitButton = document.getElementById('submit-button');
-
       if (!form.checkValidity()) {
         mostrarMensagemErro("Por favor, preencha todos os campos obrigatórios!");
         return;
@@ -248,10 +175,8 @@
       const formData = new FormData(form);
       const data = new URLSearchParams(formData).toString();
 
-      // Exibe overlay de carregamento
       document.getElementById('loading-overlay').style.display = 'flex';
 
-      // Envia dados via fetch
       fetch("https://script.google.com/macros/s/AKfycbxu_jVaotWytMOQh4UCZetFZFOxgk5ePrOkaviDd-qKNPiu2_8BjCaNczAVZzaDwAbj/exec", {
         method: "POST",
         headers: {
@@ -262,8 +187,13 @@
       .then(response => response.json())
       .then(responseData => {
         document.getElementById('loading-overlay').style.display = 'none';
-        mostrarMensagemSucesso();
-        exibirNumeroTransferencia();
+
+        if (responseData.success) {
+          mostrarMensagemSucesso();
+          exibirNumeroTransferencia(responseData.numeroTransferencia);
+        } else {
+          mostrarMensagemErro("Erro ao enviar: Resposta inválida do servidor.");
+        }
       })
       .catch(error => {
         document.getElementById('loading-overlay').style.display = 'none';
@@ -282,10 +212,9 @@
       document.getElementById('success-message').style.display = 'none';
     }
 
-    function exibirNumeroTransferencia() {
-      const transferId = Math.floor(Math.random() * 100000); // Simula um número de transferência
+    function exibirNumeroTransferencia(numero) {
       document.getElementById('numero-transferencia').style.display = 'block';
-      document.getElementById('transfer-id').textContent = transferId;
+      document.getElementById('transfer-id').textContent = numero;
     }
   </script>
 </body>
