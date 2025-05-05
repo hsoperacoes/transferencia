@@ -223,13 +223,13 @@
       const filialOrigem = document.getElementById('filial-origem').value;
       const filialDestinoSelect = document.getElementById('filial-destino');
       const emailPorFilial = {
-        ARTUR: "hs.operacoes.loja@gmail.com",
+        ARTUR: "heringarturmachado@gmail.com",
         FLORIANO: "hs.uberlandia.floriano@gmail.com",
         JOTA: "brunohenzo09@gmail.com",
         MODA: "dlaire28@gmail.com",
         PONTO: "soniameiry@gmail.com",
-        JA: "hs.operacoes.loja@gmail.com",
-        JE: "hs.operacoes.loja@gmail.com"
+        JA: "jaugustocoliveira@terra.com.br",
+        JE: "jeoliveira1966@gmail.com"
       };
       document.getElementById('email').value = emailPorFilial[filialOrigem] || "";
 
